@@ -62,7 +62,7 @@ def callback(call):
             keyboard.add(types.InlineKeyboardButton(text = "Перейти в чат", url = "https://t.me/+rrIYQE8DB700YjBi"))
             bot.send_message(yz, "Ваш запрос на [пост](" + "https://t.me/vertoggf/" + str(record[6]) + ")" + " принят🙂", parse_mode = "Markdown", reply_markup = keyboard)
             bot.send_message(record[1], "Вы успешно приняли запрос на [пост](" + "https://t.me/vertoggf/" + str(record[6]) + ")", parse_mode = "Markdown", reply_markup = keyboard)
-            cursor.execute("Update deals set id_chat = ? where id_deals = ?",(-784162684, y))
+            cursor.execute("Update deals set id_chat = ? where id_deals = ?",(0, y))
             cursor.execute("Update deals set id_executor = ? where id_deals = ?",(yz, y))
             conn.commit()
         elif call.data[0] == "n":
@@ -91,19 +91,19 @@ def handle_text(message):
             bot.register_next_step_handler(title_request, title_save)
 
             # Одобрение поста по отправленному +
-        elif message.text[0] == '+' and message.from_user.id == 640659782:
+        elif message.text[0] == '+' and message.from_user.id == 0:
             id_accept = message.text.replace("+","")
             cursor.execute("SELECT * FROM deals where id_deals = ?", (id_accept, ))
             record = cursor.fetchone()
             keyboard = types.InlineKeyboardMarkup()
             keyboard.add(types.InlineKeyboardButton(text = "Взять", url = "https://t.me/vertovivo_bot?start=" + str(id_accept)))
-            new_post = bot.send_message(-1001667640177, "🔵 Активно\n\n" + "*" + str(record[3]) + "*" + "\n\n" + str(record[4]) + "\n\nЦена: " + str(record[5]) + "р", reply_markup = keyboard, parse_mode = "Markdown")
+            new_post = bot.send_message(0, "🔵 Активно\n\n" + "*" + str(record[3]) + "*" + "\n\n" + str(record[4]) + "\n\nЦена: " + str(record[5]) + "р", reply_markup = keyboard, parse_mode = "Markdown")
             bot.send_message(record[1], "Ваш [пост](" + "https://t.me/vertoggf/" + str(new_post.message_id) + ")" + " опубликован👍", parse_mode = "Markdown")
             cursor.execute("Update deals set id_deals_in_group = ? where id_deals = ?",(new_post.message_id, id_accept))
             conn.commit()
 
             # Отклонение поста по отправленному -
-        elif message.text[0] == '-' and message.from_user.id == 640659782:
+        elif message.text[0] == '-' and message.from_user.id == 0:
             id_accept = message.text.replace("-","")
             cursor.execute("SELECT * FROM deals where id_deals = ?", (id_accept, ))
             record = cursor.fetchone()
@@ -116,7 +116,7 @@ def contains_digits(d):
 
 # Функция для отправки id сделки админу на одобрение
 def deal_approval(id_deal_, title_, description_, cost_):
-    bot.send_message(640659782, "🔵 Активно #<code>" + str(id_deal_) + "</code>\n\n" + "<b>" + str(title_) + "</b>" + "\n\n" + str(description_) + "\n\nЦена: " + str(cost_) + "р", parse_mode= "HTML")
+    bot.send_message(0, "🔵 Активно #<code>" + str(id_deal_) + "</code>\n\n" + "<b>" + str(title_) + "</b>" + "\n\n" + str(description_) + "\n\nЦена: " + str(cost_) + "р", parse_mode= "HTML")
 
 # Функция запроса названия сделки
 def title_save(message):
